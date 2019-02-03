@@ -31,13 +31,7 @@ public class UserController {
 		return "redirect:/users";
 	}
 	
-	@PutMapping("/{id}")
-	public String update(@PathVariable Long id, User newUser) {
-		User user = userRepository.findById(id).get();
-		user.update(newUser);
-		userRepository.save(user); // 기본키인 id가 테이블에 이미 존재하면 수정하고, 없으면 추가한다.
-		return "redirect:/users";
-	}
+
 	
 	@GetMapping("")
 	public String list(Model model) {
@@ -47,10 +41,41 @@ public class UserController {
 	
 	
 	@GetMapping("/{id}/form")
-	public String updateForm(@PathVariable Long id, Model model) {
+	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+		
+		User sessionedUser = (User) session.getAttribute("sessionedUser");
+		
+		if (session.getAttribute("sessionedUser") == null ) {
+			return "redirect:/users/loginForm";
+		}
+		
+		if (id != sessionedUser.getId()) {
+			throw new IllegalStateException("You can't update another user's information.");
+		}
+		
 		User user = userRepository.findById(id).get();
 		model.addAttribute("user", user);
 		return "/user/updateForm";
+	}
+	
+	@PutMapping("/{id}")
+	public String update(@PathVariable Long id, User updatedUser, HttpSession session) {
+		
+		User sessionedUser = (User) session.getAttribute("sessionedUser");
+		
+		if (session.getAttribute("sessionedUser") == null ) {
+			return "redirect:/users/loginForm";
+		}
+		
+		if (id != sessionedUser.getId()) {
+			throw new IllegalStateException("You can't update another user's information.");
+		}
+		
+		
+		User user = userRepository.findById(id).get();
+		user.update(updatedUser);
+		userRepository.save(user); // 기본키인 id가 테이블에 이미 존재하면 수정하고, 없으면 추가한다.
+		return "redirect:/users";
 	}
 	
 	@GetMapping("/form")
@@ -71,7 +96,7 @@ public class UserController {
 			System.out.println("로그인 실패!!");
 			return "redirect:/users/loginForm";
 		} else {
-			session.setAttribute("user", user);
+			session.setAttribute("sessionedUser", user);
 			System.out.println("로그인 성공!!");
 			return "redirect:/";
 		}
@@ -80,7 +105,8 @@ public class UserController {
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("user");
+		session.removeAttribute("sessionedUser");
 		return "redirect:/";
 	}
+	
 }
