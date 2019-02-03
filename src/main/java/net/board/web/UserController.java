@@ -3,6 +3,8 @@ package net.board.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +45,7 @@ public class UserController {
 		return "/user/list";
 	}
 	
+	
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, Model model) {
 		User user = userRepository.findById(id).get();
@@ -55,8 +58,23 @@ public class UserController {
 		return "/user/form";
 	}
 	
-	@GetMapping("/login")
-	public String login() {
+	@GetMapping("/loginForm")
+	public String loginForm() {
 		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session) {
+		User user = userRepository.findByUserId(userId);
+		
+		if (user == null || !user.getPassword().equals(password)) {
+			System.out.println("로그인 실패!!");
+			return "redirect:/users/loginForm";
+		} else {
+			session.setAttribute("user", user);
+			System.out.println("로그인 성공!!");
+			return "redirect:/";
+		}
+
 	}
 }
