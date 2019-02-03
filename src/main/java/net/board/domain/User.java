@@ -1,10 +1,24 @@
-package net.board.web;
+package net.board.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class User {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Column(nullable=false, length=20)
 	private String userId;
+	
 	private String password;
 	private String name;
 	private String email;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -28,6 +42,11 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public void update(User newUser) {
+		this.name = newUser.name;
+		this.email = newUser.email;
+		this.password = newUser.password;
 	}
 	@Override
 	public String toString() {
