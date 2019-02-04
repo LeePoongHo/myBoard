@@ -45,7 +45,7 @@ public class UserController {
 		
 		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
 		
-		if (HttpSessionUtils.isLoginUser(session)) {
+		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:users/loginForm";
 		}
 		
@@ -63,8 +63,8 @@ public class UserController {
 		
 		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
 		
-		if (HttpSessionUtils.isLoginUser(session)) {
-			return "redirect:users/loginForm";
+		if (!HttpSessionUtils.isLoginUser(session)) {
+			return "user/loginForm";
 		}
 		
 		if (sessionedUser.equals(id)) {
@@ -75,7 +75,7 @@ public class UserController {
 		User user = userRepository.findById(id).get();
 		user.update(updatedUser);
 		userRepository.save(user); // 기본키인 id가 테이블에 이미 존재하면 수정하고, 없으면 추가한다.
-		return "redirect:users";
+		return "redirect:/users";
 	}
 	
 	@GetMapping("/form")
@@ -94,11 +94,11 @@ public class UserController {
 		
 		if (user == null || !user.matchPassword(password)) {
 			System.out.println("로그인 실패!!");
-			return "redirect:users/loginForm";
+			return "redirect:/users/loginForm";
 		} else {
 			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 			System.out.println("로그인 성공!!");
-			return "redirect:";
+			return "redirect:/";
 		}
 
 	}
@@ -106,7 +106,7 @@ public class UserController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
-		return "redirect:";
+		return "redirect:/";
 	}
 	
 }

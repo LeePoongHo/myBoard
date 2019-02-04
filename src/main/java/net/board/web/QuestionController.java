@@ -24,7 +24,7 @@ public class QuestionController {
 	@GetMapping("/form")
 	public String qnaForm(HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "users/loginForm";
+			return "redirect:/users/loginForm";
 		}
 		return "qna/form";
 	}
