@@ -20,7 +20,6 @@ import net.board.repository.UserRepository;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-	private List<User> users = new ArrayList<User>();
 	
 	@Autowired
 	private UserRepository userRepository;

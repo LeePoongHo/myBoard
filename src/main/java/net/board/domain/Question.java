@@ -1,8 +1,14 @@
 package net.board.domain;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Question {
@@ -11,19 +17,25 @@ public class Question {
 	@GeneratedValue
 	private Long id;
 	
-	private String writer;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	private User writer;
+	
 	private String title;
 	private String contents;
+	private String createTime;
 	
 	public Question() {
 		
 	}
 	
-	public Question(String writer, String title, String contents) {
+	public Question(User writer, String title, String contents) {
 		super();
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
+		this.createTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
 	}
 	
 	public Long getId() {
@@ -31,12 +43,6 @@ public class Question {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
 	}
 	public String getTitle() {
 		return title;
