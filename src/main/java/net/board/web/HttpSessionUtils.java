@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSession;
 import net.board.domain.User;
 
 public class HttpSessionUtils {
-	public static final String USER_SESSION_KEY = "sessionUser";
+	public static final String USER_SESSION_KEY = "sessionedUser";
 	
 	public static boolean isLoginUser(HttpSession session) {
 		Object sessionedUser = session.getAttribute(USER_SESSION_KEY);

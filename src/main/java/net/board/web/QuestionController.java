@@ -24,19 +24,19 @@ public class QuestionController {
 	@GetMapping("/form")
 	public String qnaForm(HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+			return "users/loginForm";
 		}
-		return "/qna/form";
+		return "qna/form";
 	}
 	
 	@PostMapping("")
 	public String create(String title, String contents, HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+			return "users/loginForm";
 		}
 		
 		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
-		Question newQuestion = new Question(sessionedUser.getId(), sessionedUser.getName(), title, contents);
+		Question newQuestion = new Question(sessionedUser.getName(), title, contents);
 		
 		questionRepository.save(newQuestion);
 		return "redirect:/";
@@ -46,7 +46,7 @@ public class QuestionController {
 	public String show(@PathVariable Long id, Model model) {
 		Question qna = questionRepository.findById(id).get();
 		model.addAttribute("qna", qna);
-		return "/qna/show";
+		return "qna/show";
 	}
 	
 	
