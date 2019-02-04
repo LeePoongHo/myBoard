@@ -33,11 +33,17 @@ public class User {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	public boolean matchId(Long newId) {
+		return id.equals(newId);
+	}
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public boolean matchPassword(String newPassword) {
+		return password.equals(newPassword);
 	}
 	public String getName() {
 		return name;
